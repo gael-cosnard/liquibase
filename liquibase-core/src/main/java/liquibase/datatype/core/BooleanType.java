@@ -12,12 +12,12 @@ import liquibase.database.core.OracleDatabase;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.database.core.SybaseASADatabase;
 import liquibase.database.core.SybaseDatabase;
+import liquibase.database.core.VoltDBDatabase;
 import liquibase.datatype.DataTypeInfo;
 import liquibase.datatype.DatabaseDataType;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.statement.DatabaseFunction;
-
 @DataTypeInfo(name = "boolean", aliases = {"java.sql.Types.BOOLEAN", "java.lang.Boolean", "bit"}, minParameters = 0, maxParameters = 0, priority = LiquibaseDataType.PRIORITY_DEFAULT)
 public class BooleanType extends LiquibaseDataType {
 
@@ -44,6 +44,8 @@ public class BooleanType extends LiquibaseDataType {
             }
         } else if (database instanceof HsqlDatabase) {
             return new DatabaseDataType("BOOLEAN");
+        } else if (database instanceof VoltDBDatabase) {
+            return new DatabaseDataType("TINYINT");
         }
 
         return super.toDatabaseDataType(database);
@@ -102,7 +104,8 @@ public class BooleanType extends LiquibaseDataType {
                 || database instanceof OracleDatabase
                 || database instanceof SQLiteDatabase
                 || database instanceof SybaseASADatabase
-                || database instanceof SybaseDatabase;
+                || database instanceof SybaseDatabase
+                || database instanceof VoltDBDatabase;
     }
 
     /**

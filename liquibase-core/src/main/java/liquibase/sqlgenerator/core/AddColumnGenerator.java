@@ -72,7 +72,7 @@ public class AddColumnGenerator extends AbstractSqlGenerator<AddColumnStatement>
         if ((statement.getAddAfterColumn() != null) && !(database instanceof MySQLDatabase)) {
         	validationErrors.addError("Cannot add column on specific position");
         }
-        if ((statement.getAddBeforeColumn() != null) && !((database instanceof H2Database) || (database instanceof HsqlDatabase))) {
+        if ((statement.getAddBeforeColumn() != null) && !((database instanceof H2Database) || (database instanceof HsqlDatabase) || (database instanceof VoltDBDatabase))) {
         	validationErrors.addError("Cannot add column on specific position");
         }
         if ((statement.getAddAtPosition() != null) && !(database instanceof FirebirdDatabase)) {
@@ -155,6 +155,10 @@ public class AddColumnGenerator extends AbstractSqlGenerator<AddColumnStatement>
 
         if (statement.getAddAfterColumn() != null && !statement.getAddAfterColumn().isEmpty()) {
             alterTable += " AFTER `" + statement.getAddAfterColumn() + "` ";
+        }
+
+        if (statement.getAddBeforeColumn() != null && !statement.getAddBeforeColumn().isEmpty()) {
+            alterTable += " BEFORE `" + statement.getAddBeforeColumn() + "` ";
         }
 
         return alterTable;

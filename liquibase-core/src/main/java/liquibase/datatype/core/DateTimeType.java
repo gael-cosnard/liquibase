@@ -25,7 +25,8 @@ public class DateTimeType extends LiquibaseDataType {
                 || database instanceof DerbyDatabase
                 || database instanceof FirebirdDatabase
                 || database instanceof H2Database
-                || database instanceof HsqlDatabase) {
+                || database instanceof HsqlDatabase
+                || database instanceof VoltDBDatabase) {
             return new DatabaseDataType("TIMESTAMP");
         }
 

@@ -10,11 +10,13 @@ import liquibase.database.core.InformixDatabase;
 import liquibase.database.core.OracleDatabase;
 import liquibase.database.core.SybaseASADatabase;
 import liquibase.database.core.SybaseDatabase;
+import liquibase.database.core.VoltDBDatabase;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.exception.ValidationErrors;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.AutoIncrementConstraint;
 import liquibase.statement.core.AddColumnStatement;
+import liquibase.structure.core.Column;
 
 public class AddColumnGeneratorDefaultClauseBeforeNotNull extends AddColumnGenerator {
     @Override
@@ -32,7 +34,8 @@ public class AddColumnGeneratorDefaultClauseBeforeNotNull extends AddColumnGener
                 || database instanceof FirebirdDatabase
                 || database instanceof SybaseDatabase
                 || database instanceof SybaseASADatabase
-                || database instanceof InformixDatabase;
+                || database instanceof InformixDatabase
+                || database instanceof VoltDBDatabase;
     }
 
     @Override
@@ -84,6 +87,11 @@ public class AddColumnGeneratorDefaultClauseBeforeNotNull extends AddColumnGener
                 alterTable += " PRIMARY KEY";
             }
         }
+        
+        if (statement.getAddBeforeColumn() != null && !statement.getAddBeforeColumn().isEmpty()) {
+            alterTable += " BEFORE " + database.escapeObjectName(statement.getAddBeforeColumn(), Column.class);
+        }
+
         return alterTable;
     }
 
